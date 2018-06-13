@@ -1,0 +1,236 @@
+<style lang="less">
+page{
+  background-color:#eeeeee;
+}
+
+.view-top{
+  position: relative;
+  width: 100%;
+  height: 120rpx;
+}
+
+.view-top text{
+  position: absolute;
+  top:50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  color:#777777;
+}
+
+.pickerview{
+  width: 100%; 
+  height: 400rpx;  
+}
+
+.pickerview-indicator{
+  position: relative;
+  background:rgba(100, 100, 100, 0.25);
+  height: 110rpx;
+}
+
+.pickerview-item{
+  line-height: 110rpx;
+  display: flex;//必须有，不然没有效果 
+  justify-content: center; 
+  align-items: center;
+}
+
+.view-middle{
+  position: relative;
+  width: 100%;
+  height: 120rpx;
+}
+
+.view-middle text{
+  position: absolute;
+  top:50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  color:#777777;
+}
+
+.view-plan{
+  position: relative;
+  width: 100%;
+  height: 150rpx;
+  background-color: #fefefe;
+  margin-bottom:100rpx;
+}
+
+.view-plan-new{
+  display: inline-block;
+  width: 33%;
+}
+
+.view-plan-review{
+  display: inline-block;
+  width: 34%;
+}
+
+.view-plan-predict{
+  display: inline-block;
+  width: 33%;
+}
+
+.view-plan-title{
+  display: block;
+  width: 100%;
+  text-align: center;
+  color:#448ef6;
+  font-size: 25rpx;
+  margin-top: 15rpx;
+}
+
+.view-plan-text{
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 40rpx;
+  margin-top: 20rpx;
+}
+
+.view-remind{
+  position: relative;
+  height: 100rpx;
+  width: 100%;
+  background: #fefefe;
+  border-top: solid 1px #dddddd;
+  border-bottom: solid 1px #dddddd;
+}
+
+.view-remind text{
+  position: absolute;
+  top:50%;
+  left: 40rpx;
+  transform: translateY(-50%);
+}
+
+.view-remind-switch{
+  position: absolute;
+  top:50%;
+  right: 40rpx;
+  transform: translateY(-50%);
+}
+
+.view-footer{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 120rpx;
+  background: #fefefe;
+  border-top:solid 1px #dddddd;
+  display: flex;//必须有，不然没有效果 
+  justify-content: center; 
+  align-items: center;
+}
+
+.view-footer button{
+  width: 80%;
+  height: 75%;
+  background: rgba(4, 190, 2, 1);
+  color: #fefefe;
+  border-radius: 50rpx;
+  font-size: 40rpx;
+  display: flex;//必须有，不然没有效果 
+  justify-content: center; 
+  align-items: center;
+}
+
+</style>
+<template>
+  <view class="container">
+    <view class="view-top">
+      <text>学习完成时间</text>
+    </view>
+    <picker-view indicator-class="pickerview-indicator" class="pickerview" value="{{currentDate}}">
+      <picker-view-column>
+        <view wx:for="{{years}}" class="pickerview-item">{{item}}年</view>
+      </picker-view-column>
+      <picker-view-column>
+        <view wx:for="{{months}}" class="pickerview-item">{{item}}月</view>
+      </picker-view-column>
+      <picker-view-column>
+        <view wx:for="{{days}}" class="pickerview-item">{{item}}日</view>
+      </picker-view-column>
+    </picker-view>
+    <view class="view-middle">
+      <text>每天目标</text>
+    </view>
+    <view class="view-plan">
+      <view class="view-plan-new">
+        <text class="view-plan-title">学习新词</text>
+        <text class="view-plan-text">{{studyPlan.newWord}} 个</text>
+      </view>
+      <view class="view-plan-review">
+        <text class="view-plan-title">预计复习</text>
+        <text class="view-plan-text">{{studyPlan.reviewWord}} 个</text>
+      </view>
+      <view class="view-plan-predict">
+        <text class="view-plan-title">预计时间</text>
+        <text class="view-plan-text">{{studyPlan.predictTime}} 分钟</text>
+      </view>
+    </view>
+    <view class="view-remind">
+      <text>每日提醒我背单词</text>
+      <switch class="view-remind-switch" bindchange=""/>
+    </view>
+    <view class="view-remind" style="top:-1px;margin-bottom:150rpx;">
+      <text>提醒时间</text>
+    </view>
+    <view class="view-footer">
+      <button color="rgb(68, 142, 246)" @tap="confirm">确认</button>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  var date = new Date()
+  var currentDate = ""
+  var years = []
+  var months = []
+  var days = []
+
+  currentDate=date.getFullYear()+'-'+(date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1)+'-'+(date.getDate()<10?'0'+date.getDate():date.getDate())
+  for (let i = date.getFullYear(); i <= date.getFullYear()+50; i++) {
+    years.push(i)
+  }
+  for (let i = 1 ; i <= 12; i++) {
+    months.push(i)
+  }
+  for (let i = 1 ; i <= 31; i++) {
+    days.push(i)
+  }
+  
+
+  export default class Index extends wepy.page {
+    config = {
+      backgroundColor:"#f5f5f5",
+      backgroundTextStyle: "light",
+      navigationBarTitleText: "修改学习计划",
+    }
+
+    data={
+      years: years,
+      months: months,
+      days: days,
+      currentDate:currentDate,
+      studyPlan:{
+        newWord:20,
+        reviewWord:36,
+        predictTime:56
+      }
+    }
+
+    methods={
+      confirm(e){
+        wepy.navigateBack()
+      }
+    }
+
+    onLoad() {
+      
+    }
+  }
+</script>

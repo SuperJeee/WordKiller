@@ -1,0 +1,156 @@
+<style lang="less">
+.container{
+  width: 650rpx;
+  height: 900rpx;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius:20rpx;
+  background:#fefefe;
+}
+
+.content{
+  position: relative;
+  width: 100%;
+  height: 200rpx;
+  display: flex;//必须有，不然没有效果 
+  justify-content: center; 
+  align-items: center;
+}
+
+.content text{ 
+  width: 100%; 
+  text-align: center;
+  font-size: 60rpx;
+  display: flex;//必须有，不然没有效果 
+  justify-content: center; 
+  align-items: center;
+}
+
+.symbol{
+  position: relative;
+  width: 100%;
+  display: flex;//必须有，不然没有效果 
+  justify-content: center; 
+  align-items: center;
+}
+
+.symbol text{ 
+  width: 100%; 
+  text-align: center;
+  font-size: 30rpx;
+  display: flex;//必须有，不然没有效果 
+  justify-content: center; 
+  align-items: center;
+  color:#999999;
+}
+
+.translate{
+  width: 100%;
+  margin-left: 50rpx;
+  margin-top: 100rpx;
+}
+
+.translate-title{
+  display: block;
+  font-size: 30rpx;
+  color: #777777;
+  line-height: 40rpx;
+}
+
+.translate-group{
+
+}
+
+.translate-main{
+  display: block;
+  font-size: 30rpx;
+  color:#222222;
+  width: 550rpx;
+}
+
+.sentence{
+  width: 100%;
+  margin-left: 50rpx;
+  margin-top: 100rpx;
+}
+
+.sentence-title{
+  display: block;
+  font-size: 30rpx;
+  color: #777777;
+  line-height: 40rpx;
+}
+
+.sentence-group{
+
+}
+
+.sentence-main{
+  display: block;
+  font-size: 30rpx;
+  color:#222222;
+  line-height: 34rpx;
+  width: 550rpx;
+}
+</style>
+<template>
+  <view>
+    <view class="container">
+      <view class="content">
+        <text>{{word.content}}</text>
+      </view>
+      <view class="symbol">
+        <text>{{word.symbol}}</text>
+        <img src=""/>
+      </view>
+      <view class="translate" wx:if="{{!hidden}}">
+        <text class="translate-title">中文解释</text>
+        <view class="translate-group">
+          <view  class="translate-main" wx:for="{{word.translate}}">{{item}}</view>
+        </view>
+      </view>
+      <view class="sentence" wx:if="{{!hidden}}">
+        <text class="sentence-title">例句</text>
+        <view class="sentence-group">
+          <text class="sentence-main">{{word.sentence}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Component extends wepy.component {
+    data={
+
+    }
+
+    props={
+      word: {
+        type: Object,
+        default: {},
+        twoWay: true
+      },
+      hidden:{
+        type: Boolean,
+        default: true,
+        twoWay: true
+      },
+      next:{
+        type: Boolean,
+        default: false,
+        twoWay: true
+      },
+    }
+
+    methods={
+      
+    }
+
+    onLoad() {
+      var that=this
+    } 
+  }
+</script>

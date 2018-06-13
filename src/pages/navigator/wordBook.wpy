@@ -1,0 +1,253 @@
+<style lang="less">
+page{
+  background-color:#eeeeee;
+}
+
+.top-bar{
+  position: fixed;
+  background: #fefefe;
+  border-bottom: solid 1px #dddddd;
+  height: 90rpx;
+  width: 100%;
+  z-index: 999;
+}
+
+.top-bar view{
+  position: relative;
+  width: 750rpx;
+  height: 90rpx;
+}
+
+.top-bar text{
+  position: absolute;
+  top:50%;
+  left: 44%;
+  transform: translateY(-50%);
+  color:#8a8a8a;
+}
+
+.top-bar image{
+  position: absolute;
+  top:50%;
+  left: 56%;
+  transform: translateY(-50%);
+  height: 12rpx;
+  width: 20rpx;
+}
+
+.booklist{
+  position: relative;
+  top:102rpx;
+}
+
+.bookitem{
+  position: relative;
+  height: 200rpx;
+  background: #fefefe;
+  
+}
+
+.bookitem-img{
+  display: inline-block;
+  position: relative;
+  height: 100%;
+  width: 200rpx;
+}
+
+.bookitem-img image{
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  height: 160rpx;
+  width: 120rpx;
+  border-radius: 10rpx;
+}
+
+.bookitem-la{
+  display: inline-block;
+  position: relative;
+  height: 100%;
+  width: 350rpx;
+}
+
+.bookitem-la text{
+  width: 100%;
+  position: absolute;
+  top:20rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-block;
+  color: #222222;
+}
+
+.bookitem-btn{
+  display: inline-block;
+  position: relative;
+  height: 100%;
+  width: 200rpx;
+}
+
+.bookitem-btn text{
+  position: absolute;
+  left: 50%;
+  bottom: 20rpx;
+  transform: translateX(-50%);
+  width: 200rpx;
+  height: 60rpx;
+  color: #777777;
+  display: flex;//必须有，不然没有效果 
+  justify-content: center; 
+  align-items: center;
+  font-size:30rpx;
+}
+
+.bookitem-btn button{
+  position: absolute;
+  left: 50%;
+  bottom: 20rpx;
+  transform: translateX(-50%);
+  width: 120rpx;
+  height: 60rpx;
+  background: #04BE02;
+  border: 0;
+  color: #fefefe;
+  display: flex;//必须有，不然没有效果 
+  justify-content: center; 
+  align-items: center;
+  font-size:30rpx;
+}
+</style>
+<template>
+  <view class="container">
+    <picker class="top-bar" value="{{index}}" range="{{allTags}}">
+      <view>
+        <text>{{currentTag}}</text>
+        <image src="../../assets/imgs/dropdown.png"/>
+      </view>
+    </picker>
+    <view class="booklist">
+      <view class="bookitem" wx:for="{{allWordBooks}}" style="margin-bottom:10rpx;">
+        <view class="bookitem-img">
+          <image src="{{item.src}}"/>
+        </view>
+        <view class="bookitem-la">
+          <text>{{item.name}}</text>
+        </view>
+        <view class="bookitem-btn">
+          <text wx:if="{{item.name==currentWordBook.name}}">正在学习</text>
+          <button wx:else id="{{item.id}}" @tap="switchBook">切换</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Index extends wepy.page {
+    config = {
+      backgroundColor:"#f5f5f5",
+      backgroundTextStyle: "light",
+      navigationBarTitleText: "选择单词书",
+    }
+
+    data={
+      showpicker:"none",
+      currentTag:"大学",
+      allTags:[
+        "小学",
+        "初中",
+        "高中",
+        "大学",
+        "考研",
+        "出国",
+        "行业英语"
+      ],
+      currentWordBook:{
+        id:1,
+        name:"大学英语四级",
+        tag:"大学",
+        src:"../../assets/imgs/wordbook/cet4.jpg"
+      },
+      allWordBooks:[
+        {
+          id:1,
+          name:"大学英语四级",
+          tag:"大学",
+          src:"../../assets/imgs/wordbook/cet4.jpg"
+        },
+        {
+          id:2,
+          name:"大学英语六级",
+          tag:"大学",
+          src:"../../assets/imgs/wordbook/cet6.jpg"
+        },
+        {
+          id:3,
+          name:"研究生入学考试",
+          tag:"考研",
+          src:"../../assets/imgs/wordbook/yanjiushengruxue.jpg"
+        },
+        {
+          id:4,
+          name:"高考词汇",
+          tag:"高中",
+          src:"../../assets/imgs/wordbook/gaokao.jpg"
+        },
+        {
+          id:5,
+          name:"中考词汇",
+          tag:"初中",
+          src:"../../assets/imgs/wordbook/zhongkao.jpg"
+        },
+        {
+          id:6,
+          name:"商务英语",
+          tag:"行业英语",
+          src:"../../assets/imgs/wordbook/shangwu.jpg"
+        },
+        {
+          id:7,
+          name:"新概念英语词汇",
+          tag:"小学",
+          src:"../../assets/imgs/wordbook/xingainian.jpg"
+        },
+        {
+          id:8,
+          name:"托福词汇",
+          tag:"出国",
+          src:"../../assets/imgs/wordbook/toefl.jpg"
+        },
+        {
+          id:9,
+          name:"雅思词汇",
+          tag:"出国",
+          src:"../../assets/imgs/wordbook/yasi.jpg"
+        }
+      ]
+    }
+
+    methods={
+      getWordBook(e){
+        var val=e.detail.value
+        this.data.currentTag=val[0]
+      },
+      switchBook(e){
+        var that=this
+        for(let item of that.data.allWordBooks){
+          if(item.id==e.target.id){
+            that.currentWordBook=item
+            break
+          }
+        } 
+      }
+    }
+
+    onLoad() {
+      
+    }
+  }
+</script>
+

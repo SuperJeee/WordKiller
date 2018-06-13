@@ -1,0 +1,242 @@
+<style lang="less">
+page{
+  background-color:#eeeeee;
+}
+
+.view-top{
+  height: 450rpx;
+  background:linear-gradient(to bottom, #4ECCA3, #33cccc);
+  border-radius: 0% 0% 20% 20%; 
+}
+
+.view-top-circle{
+  position: relative;
+  top:50rpx;
+  left: 200rpx;
+  height: 350rpx;
+  width: 350rpx;
+  border-radius: 50%;
+  background: rgba(35, 35, 35, 0.2);
+  transform-style: preserve-3d;
+}
+
+.view-top-daynum{
+  height: 320rpx;
+  width: 320rpx;
+  border-radius: 50%;
+  background: #DAEFE6;
+  position: absolute; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+}
+
+.view-top-text{
+  position: absolute; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%);
+}
+
+.view-center{
+  position: relative;
+  height: 200rpx;
+  background: #ffffff;
+  border-bottom: solid 1px #cccccc;
+}
+
+.view-center-table{
+  position: absolute;
+  top: 20rpx; 
+  display: table;
+  width:100%;
+  height: 160rpx;
+}
+
+.view-center-table view{
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  width: 50%;
+}
+
+.view-tail{
+  display: table;
+  margin-top: 30rpx;
+  background: #ffffff;
+  border-top: solid 1px #cccccc;
+  border-bottom: solid 1px #cccccc;
+  width:100%;
+  height: 200rpx;
+}
+
+.view-tail-record{
+  display: table;
+  width:100%;
+  height:100%;
+}
+
+.view-tail-record view{
+  display: table-cell;
+  width:30%;
+  height:100%;
+  vertical-align: middle;
+}
+
+.view-tail-record view text{
+  display:block;
+  width:100%;
+  text-align:center;
+}
+
+.view-tail-studybtn{
+  height: 150rpx;
+  width: 150rpx;
+  border:0;
+  border-radius: 50%;
+  padding-top:25rpx;
+  padding-bottom:25rpx;
+  font-size: 40rpx;
+  line-height: 50rpx;
+  background: #3B9A9C;
+  color:#ffffff;
+  position: absolute; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%);
+}
+
+.view-leg{
+  height: 150rpx;
+  background: #ffffff;
+}
+
+.view-footer{
+  display: table;
+  height: 150rpx;
+  width:100%;
+  background: #ffffff;
+  border-bottom: solid 1px #cccccc;
+}
+
+.view-footer view{
+  display: table-cell;
+  height: 100%;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.view-footer view image{
+  display: inline-block;
+  vertical-align:middle;
+  height: 64rpx;
+  width: 64rpx;
+  margin-right:10rpx;
+}
+
+.view-footer view text{
+  width: 100%;
+  height: 100%;
+  line-height: 150rpx;
+  color:#777777;
+  font-size: 30rpx;
+}
+</style>
+<template>
+  <view class="container">
+    <view style="background: #ffffff;">
+      <view class="view-top">
+        <view class="view-top-circle">
+          <view class="view-top-daynum">
+            <view class="view-top-text">
+              <view>
+                <text style="color:#25bc87;font-size:100rpx;">{{daysRemain}}</text>
+                <text style="color:#66726c;">天</text>
+              </view>
+              <text style="display:block;width:100%;text-align:center;color:#66726c;font-size:28rpx">距离计划完成</text>
+            </view>      
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="view-center">
+      <view class="view-center-table">
+        <view style="border-right:solid 1px #cccccc;">
+          <text style="display:block;color:#3B9A9C;font-size:50rpx;">{{mediumWordNum}}</text>
+          <text style="display:block;color:#777777;">熟词</text>
+        </view>
+        <view>
+          <text style="display:block;color:#3B9A9C;font-size:50rpx;">{{stockWordNum}}</text>
+          <text style="display:block;color:#777777;">未学单词</text>
+        </view>
+      </view>
+    </view>
+    <view class="view-tail">
+      <view style="display:table-cell;width:66%;height:100%;">
+        <view class="view-tail-record">
+          <view style="width:10%;"></view>
+          <view>
+            <text style="font-size:50rpx;color:#3B9A9C;">{{todayWordNum}}</text>
+            <text style="font-size:30rpx;color:#777777;">今日单词</text>
+          </view>
+          <view>
+            <text style="font-size:50rpx;color:#3B9A9C;">{{newWordNum}}</text>
+            <text style="font-size:30rpx;color:#777777;">生词</text>
+          </view>
+          <view>
+            <text style="font-size:50rpx;color:#3B9A9C;">{{finishWordNum}}</text>
+            <text style="font-size:30rpx;color:#777777;">已完成</text>
+          </view>
+        </view>
+      </view>
+      <view style="position:relative;display:table-cell;width:34%;height:100%;transform-style: preserve-3d;">
+        <button class="view-tail-studybtn" @tap="startStudy">开始学习</button>
+      </view>
+    </view>
+    <view class="view-footer">
+      <view style="width:2%;"></view>
+      <view style="width:32%;">
+        <image src="../assets/imgs/headset.png"/>
+        <text>听音复习</text>
+      </view>
+      <view style="width:32%;">
+        <image src="../assets/imgs/study.png"/>
+        <text>熟词复习</text>
+      </view>
+      <view style="width:32%;">
+        <image src="../assets/imgs/statistic.png"/>
+        <text>学习统计</text>
+      </view>
+      <view style="width:2%;"></view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Index extends wepy.page {
+    config = {
+      backgroundColor:"#f5f5f5",
+      backgroundTextStyle: "light"
+    }
+
+    methods={
+      startStudy(e){
+        wepy.navigateTo({
+          url:'/pages/navigator/repeatWord'
+        })
+      }
+    }
+  
+    data={
+      daysRemain:999,
+      mediumWordNum:780,
+      stockWordNum:3200,
+      todayWordNum:30,
+      newWordNum:20,
+      finishWordNum:0
+    }
+  }
+</script>

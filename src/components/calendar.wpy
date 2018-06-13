@@ -1,0 +1,244 @@
+<style lang="less">
+.top{
+  width: 750rpx;
+  height: 80rpx;
+}
+
+.top-left{
+  display: inline-block;
+  position: relative;
+  width: 32%;
+}
+
+.top-left image{
+  position: absolute;
+  right: 0;
+  top:50%;
+  transform: translateY(-50%);
+  height: 40rpx;
+  width: 40rpx;
+}
+
+.top-center{
+  display: inline-block;
+  position: relative;
+  width: 36%;
+}
+
+.top-center text{
+  position: absolute;
+  left:50%;
+  top:50%;
+  transform: translate(-50%,-50%);
+  font-size: 36rpx;
+  text-align: center;
+  width: 100%;
+}
+
+.top-right{
+  display: inline-block;
+  position: relative;
+  width: 32%;
+  background: #555555;
+}
+
+.top-right image{
+  position: absolute;
+  left:0;
+  top:50%;
+  transform: translateY(-50%);
+  height: 40rpx;
+  width: 40rpx;
+}
+
+.main{
+  position: relative;
+  width: 100%;
+}
+
+.table{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 91%;
+}
+
+.thead{
+  width: 100%;
+}
+
+.tbody{
+  width: 100%;
+}
+
+.tr{
+  
+}
+
+.th{
+  display: inline-block;
+  width: 14%;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.td{
+  position: relative;
+  display: inline-block;
+  width: 14%;
+  height: 60rpx; 
+  text-align: center;
+  vertical-align: middle;
+}
+
+.td view{
+  position: absolute;
+  left: 50%;
+  top:50%;
+  transform: translate(-50%,-50%);
+  width: 60%;
+  height: 80%;
+}
+
+.stand{
+  display: inline-block;
+  width: 1%;
+}
+</style>
+<template>
+  <view class="container">
+    <view class="top">
+      <view class="top-left" @tap="lastMonth">
+        <image src="../assets/imgs/left.png"/>
+      </view>
+      <view class="top-center">
+        <text>{{current.year}}年{{current.month}}月</text>
+      </view>
+      <view class="top-right" @tap="nextMonth">
+        <image src="../assets/imgs/right.png"/>
+      </view>
+    </view>
+    <view class="main">
+      <view class="table">
+        <view class="thead">
+          <view class="tr">
+            <view class="stand"></view>
+            <view class="th" style="color:#e90011">Sun</view>
+            <view class="th" style="color:#777777">Mon</view>
+            <view class="th" style="color:#777777">Tue</view>
+            <view class="th" style="color:#777777">Wen</view>
+            <view class="th" style="color:#777777">Thu</view>
+            <view class="th" style="color:#777777">Fri</view>
+            <view class="th" style="color:#e90010">Sat</view>
+            <view class="stand"></view>
+          </view>
+        </view>
+        <view class="tbody">
+          <view class="tr" wx:for="{{currentMonDays}}">
+            <view class="stand"></view>
+            <view class="td" wx:for="{{item}}"><view>{{item==undefined?"":item}}</view></view>
+            <view class="stand"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Component extends wepy.component {
+    data={
+      current:{
+        month:null,
+        year:null
+      },
+      currentMonDays:[],
+      signinDate:[]
+    }
+
+    /*根据日期计算星期*/
+    weekNumber(y, m, d, that) {
+      var wk
+      if (m <= 12 && m >= 1) {
+        for (let i = 1; i < m; ++i) {
+            d += that.getMDay(y, i, that)
+        }
+      }
+      wk = (y - 1 + (y - 1) / 4 - (y - 1) / 100 + (y - 1) / 400 + d) % 7
+      //0对应星期天，1对应星期一
+      return parseInt(wk)
+    }
+
+    /* 获取某年某月的天数 */
+    getMDay(y, m, that) {
+      var mday = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+      if ((y % 4 == 0 && y % 100 != 0) || y % 400 == 0) //判断是否是闰月
+        mday[1] = 29
+      return mday[m - 1]
+    }
+
+    /* 获取某年某月的日历 */
+    getMDayList(y, m , that){
+      var total=that.getMDay(y, m, that)
+      var fsweeknum=that.weekNumber(y, m, 1, that)
+      var daylist=[]
+      var week=0
+
+      for(let i=0;i<total+fsweeknum;i++){
+        week=parseInt(i/7)
+        if(i%7==0){
+          daylist[week]=[]
+        }
+        if(i<fsweeknum){
+          daylist[week][i%7]=undefined
+        }else{
+          daylist[week][i%7]=i-fsweeknum+1
+        }
+      }
+
+      return daylist
+    }
+
+    methods={
+      lastMonth(e){
+        var that=this
+        var month=that.current.month
+        month-=1
+        if(month<=0){
+          that.current.year=that.current.year-1
+          that.current.month=12
+        }
+        else{
+          that.current.month-=1
+        }
+        that.currentMonDays=that.getMDayList(that.current.year,that.current.month,that)
+      },
+      nextMonth(e){
+        var that=this
+        var month=that.current.month
+        month+=1
+        if(month>=13){
+          that.current.year=that.current.year+1
+          that.current.month=1
+        }
+        else{
+          that.current.month+=1
+        }
+        that.currentMonDays=that.getMDayList(that.current.year,that.current.month,that)
+      }
+    }
+
+    onLoad() {
+      var that=this
+      var date=new Date()
+      that.current.year=date.getFullYear()
+      that.current.month=date.getMonth()+1
+      that.currentMonDays=that.getMDayList(that.current.year,that.current.month,that)
+    }
+    
+    
+  }
+</script>
+

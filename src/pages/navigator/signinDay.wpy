@@ -1,0 +1,73 @@
+<style lang="less">
+page{
+  background-color:#eeeeee;
+}
+
+.top-sgiday{
+  position: relative;
+  width:100%;
+}
+
+.top-sgiday text{
+  color:#448ef6;
+  font-size:100rpx;
+  display: flex;//必须有，不然没有效果 
+  justify-content: center; 
+  align-items: center;
+}
+.top-text{
+  width:100%;
+}
+
+.top-text text{
+  width:100%;
+  display: flex;//必须有，不然没有效果 
+  justify-content: center; 
+  align-items: center;
+}
+
+.calendar{
+  margin-top:20rpx;
+}
+</style>
+<template>
+  <view class="container">
+    <view class="top-sgiday">
+      <text>
+        {{signindaynum}}
+      </text>
+    </view>
+    <view class="top-text">
+      <text>
+        打卡天数
+      </text>
+    </view>
+    <calendar class="calendar"></calendar> 
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import Calendar from '../../components/calendar'
+
+  export default class Index extends wepy.page {
+    components = {
+      calendar: Calendar
+    }
+
+    config = {
+      backgroundColor:"#f5f5f5",
+      backgroundTextStyle: "light",
+      navigationBarTitleText: "打卡日期",
+    }
+
+    data={
+      signindaynum:null
+    }
+
+    onLoad() {
+     var that=this
+     that.signindaynum=1
+    }
+  }
+</script>

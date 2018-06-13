@@ -1,0 +1,77 @@
+<style lang="less">
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+
+export default class extends wepy.app {
+  constructor () {
+    super()
+    this.use('promisify')
+  }
+
+  config = {
+    pages: [
+      'pages/index',
+      'pages/wordNote',
+      'pages/userInfo',
+      'pages/navigator/modifyStudyPlan',
+      'pages/navigator/accent',
+      'pages/navigator/signinDay',
+      'pages/navigator/studyPlan',
+      'pages/navigator/wordBook',
+      'pages/navigator/repeatWord',
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#4ECCA3',
+      navigationBarTitleText: '背单词',
+      navigationBarTextStyle: 'white',
+      onReachBottomDistance: 50
+    },
+    tabBar: {
+      borderStyle:"black",
+      backgroundColor:"#ffffff",
+      selectedColor:'#4ECCA3',
+      list: [{
+          pagePath: "pages/index",
+          text: "首页",
+          iconPath: "assets/imgs/home.png",
+          selectedIconPath: "assets/imgs/home-selected.png"
+        },
+        {
+          pagePath: "pages/wordNote",
+          text: "单词本",
+          iconPath: "assets/imgs/book.png",
+          selectedIconPath: "assets/imgs/book-selected.png"
+        },
+        {
+          pagePath: "pages/userInfo",
+          text: "我的",
+          iconPath: "assets/imgs/user.png",
+          selectedIconPath: "assets/imgs/user-selected.png"
+        }
+      ]
+  },
+  }
+
+  globalData={
+    userInfo:{
+
+    },
+    userStudyInfo:{
+      collectword:120,
+      wordbase:4545
+    }
+  }
+
+  onLaunch() {
+    var that=this
+    wepy.getUserInfo().then(res=>{
+      that.globalData.userInfo=res.userInfo
+      typeof cb == "function" && cb(that.globalData.userInfo) 
+    })
+  }
+}
+</script>

@@ -1,0 +1,233 @@
+<style lang="less">
+page{
+  background-color:#eeeeee;
+}
+
+.header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 750rpx;
+  height: 20rpx;
+}
+
+.wordcard{
+  margin-top:40rpx; 
+}
+
+.footer{
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  height: 150rpx;
+  width: 750rpx;
+  border-bottom: solid 1px #aaaaaa;
+  background:#fafafa;
+}
+
+.footer view{
+  display: inline-block;
+  width: 50%;
+}
+
+.btn-unknow{
+  height: 100rpx;
+  width: 300rpx;
+  margin-top:25rpx;
+  margin-bottom:25rpx;
+  display: flex;//必须有，不然没有效果 
+  justify-content: center; 
+  align-items: center;
+  background: rgba(255, 255, 255, 1);
+  border: solid 1px #777777;
+}
+
+.btn-know{
+  height: 100rpx;
+  width: 300rpx;
+  margin-top:25rpx;
+  margin-bottom:25rpx;
+  display: flex;//必须有，不然没有效果 
+  justify-content: center; 
+  align-items: center;
+  background: rgba(4, 190, 2, 1);
+  border: solid rgba(4, 190, 2, 1);
+  color:#ffffff;
+}
+
+.btn-next{
+  height: 100rpx;
+  width: 600rpx;
+  margin-top:25rpx;
+  margin-bottom:25rpx;
+  display: flex;//必须有，不然没有效果 
+  justify-content: center; 
+  align-items: center;
+  background: rgba(255, 255, 255, 1);
+  border: solid 1px #777777;
+}
+
+.btn-finish{
+  height: 100rpx;
+  width: 600rpx;
+  margin-top:25rpx;
+  margin-bottom:25rpx;
+  display: flex;//必须有，不然没有效果 
+  justify-content: center; 
+  align-items: center;
+  background: rgba(4, 190, 2, 1);
+  border: solid rgba(4, 190, 2, 1);
+  color:#ffffff;
+}
+
+.finish-view{
+  margin-top:200rpx;
+}
+</style>
+
+<template>
+  <view class="container">
+    <block wx:if="{{!finish}}">
+      <view class="header">
+        <progress percent="{{((wordpointor+1)/wordlist.length)*100}}" activeColor="#FFC300" backgroundColor="#bbbbbb"/>
+      </view>
+      <wordcard class="wordcard" :word.sync="word" :hidden.sync="hidden" :next.sync="next"></wordcard>
+    </block>
+    <block wx:else>
+      <view class="finish-view">
+        <text>已完成今天所有任务</text>
+      </view>
+    </block>
+    <view class="footer">
+      <block wx:if="{{!next&&!finish}}">
+        <view style="position: relative;" @tap="unknowWord">
+          <button class="btn-unknow">不认识</button>
+        </view>
+        <view style="position: relative;" @tap="knowWord">
+          <button class="btn-know">认识</button>
+        </view>
+      </block>
+      <block wx:elif="{{next&&!finish}}">
+        <view style="position: relative;display: inline-block;width: 100%;" @tap="knowWord">
+          <button class="btn-next">下一个</button>
+        </view>
+      </block>
+      <block wx:elif="{{!next&&finish}}">
+        <view style="position: relative;display: inline-block;width: 100%;" @tap="finishWord">
+          <button class="btn-finish">完成</button>
+        </view>
+      </block>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import WordCard from '../../components/wordcard'
+
+  export default class Index extends wepy.page {
+    config = {
+      backgroundColor:"#f5f5f5",
+      backgroundTextStyle: "light",
+      navigationBarTitleText: "开始学习",
+    }
+
+    components = {
+      wordcard:WordCard
+    }
+
+    data = {
+      word:{},
+      wordlist:[
+        {
+          content:"embody",
+          symbol:"/ɪm'bɒdɪ; em-/",
+          translate:[
+            'vt. 体现，使具体化；具体表达',
+            'n. (Embody)人名；(英)恩博迪'
+          ],
+          sentence:'All you have to do is unite mentally and emotionally with the good you wish to embody.',
+        },
+        {
+          content:"acquire",
+          symbol:"/ə'kwaɪə/",
+          translate:[
+            'vt. 获得；取得；学到；捕获'
+          ],
+          sentence:'They must struggle against their circumstances to acquire the basics of survival and human dignity.',
+        },
+        {
+          content:"reputation",
+          symbol:"/repjʊ'teɪʃ(ə)n/",
+          translate:[
+            'n. 名声，名誉；声望'
+          ],
+          sentence:'The book is well worthy of his reputation.',
+        },
+        {
+          content:"freedom",
+          symbol:"/'friːdəm/",
+          translate:[
+            'n. 自由，自主；直率',
+            'n. (Freedom)人名；(英)弗里德姆'
+          ],
+          sentence:'She bartered away her freedom for wealth.',
+        },
+        {
+          content:"economic",
+          symbol:"/,iːkə'nɒmɪk; ek-/",
+          translate:[
+            'adj. 经济的，经济上的；经济学的'
+          ],
+          sentence:'He believed that the European Economic Community should consolidate.',
+        },
+      ],
+      wordpointor:0,
+      hidden:true,
+      next:false,
+      finish:false,
+      knownum:0
+    }
+
+    methods={
+      knowWord(){
+        var that=this
+        that.wordpointor++
+        that.hidden=true
+        that.next=false
+        that.knownum++
+        if(that.wordpointor>=that.wordlist.length){
+          that.finish=true
+        }
+        else{
+          that.word=that.wordlist[that.wordpointor]
+        }
+      },
+      unknowWord(){
+        var that=this
+        that.hidden=false
+        that.next=true
+      },
+      nextWord(){
+        var that=this
+        that.wordpointor++
+        that.hidden=true
+        that.next=false
+        if(that.wordpointor>=that.wordlist.length){
+          that.finish=true
+        }
+        else{
+          that.word=that.wordlist[that.wordpointor]
+        }
+      },
+      finishWord(){
+        wepy.navigateBack()
+      }
+    }
+
+    onLoad() {
+      var that=this
+      that.word=that.wordlist[that.wordpointor]
+    }
+  }
+</script>
